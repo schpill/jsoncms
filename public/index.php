@@ -16,10 +16,10 @@
     defined('APPLICATION_ENV')  || define('APPLICATION_ENV', getenv('APPLICATION_ENV')  ? getenv('APPLICATION_ENV') : 'development');
 
     define('STORAGE_PATH', session_save_path());
-    define('APPLICATION_PATH', realpath(__DIR__));
+    define('APPLICATION_PATH', realpath(dirname(__DIR__)));
     define('CLI', false);
-    define('VENDORS_PATH', realpath(__DIR__ . '/vendor'));
-    define('VENDOR_PATH', realpath(__DIR__ . '/vendor'));
+    define('VENDORS_PATH', realpath(APPLICATION_PATH . '/vendor'));
+    define('VENDOR_PATH', realpath(APPLICATION_PATH . '/vendor'));
     define('CACHE_PATH', session_save_path() . '/cache');
 
     require_once VENDOR_PATH    . '/autoload.php';
@@ -48,10 +48,10 @@
                 File::mkdir(CACHE_PATH);
             }
 
-            $dir = __DIR__;
+            $dir = APPLICATION_PATH;
 
-            Config::set('app.module.dir',           __DIR__);
-            Config::set('mvc.dir',                  __DIR__);
+            Config::set('app.module.dir',           APPLICATION_PATH);
+            Config::set('mvc.dir',                  APPLICATION_PATH);
             Config::set('app.module.dirstorage',    $dir . DS . 'storage');
             Config::set('app.module.assets',        $dir . DS . 'assets');
             Config::set('app.module.config',        $dir . DS . 'config');
@@ -65,6 +65,8 @@
             Config::set('dir.module.logs',          $storage_dir . DS . 'logs');
 
             path('module',  $dir);
+            path('pages',   $dir . DS . 'app' . DS . 'pages');
+            path('layouts', $dir . DS . 'app' . DS . 'layouts');
             path('store',   $storage_dir);
             path('config',  Config::get('app.module.config'));
             path('cache',   CACHE_PATH);
@@ -90,19 +92,6 @@
 
         private static function tests()
         {
-            $books = Db::Book();
-            $authors = Db::Author();
-
-            $cb = $authors->firstOrCreate([
-                'firstname' => 'Charles',
-                'name'      => 'Baudelaire',
-                'century'   => '19',
-            ]);
-
-            $book = $books->firstOrCreate(['name' => 'Fleurs du Mal', 'year' => 1865, 'author_id' => $cb->id]);
-            $book2 = $books->firstOrCreate(['name' => 'livre 2', 'year' => 1891, 'author_id' => $cb->id]);
-
-            wdd($cb->books());
         }
 
         public static function assetAged($asset)
@@ -118,7 +107,7 @@
 
         public static function router()
         {
-            libProject('router');
+            libProject('cmsrouter');
         }
 
         public static function finish()

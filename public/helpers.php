@@ -134,6 +134,11 @@
         );
     }
 
+    function url($what)
+    {
+        return core('request')->url() . trim($what, '/');
+    }
+
     $debug = 'production' != APPLICATION_ENV;
 
     if (true === $debug) {

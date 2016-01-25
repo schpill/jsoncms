@@ -1,8 +1,9 @@
+php_value upload_max_filesize 56M
+php_value post_max_size 56M
+Options +FollowSymLinks -MultiViews
 <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} -s [OR]
-    RewriteCond %{REQUEST_FILENAME} -l [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^.*$ - [NC,L]
-    RewriteRule ^.*$ index.php [NC,L]
+    RewriteEngine on
+    RewriteRule ^themes/((?!cmsMedia).)*$ - [L]
+    RewriteRule  ^$ public/    [L]
+    RewriteRule  (.*) public/$1?from_htaccess=true [L]
 </IfModule>
