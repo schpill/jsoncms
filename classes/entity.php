@@ -1,0 +1,38 @@
+<?php
+    /**
+     * Thin is a swift Framework for PHP 5.4+
+     *
+     * @package    Thin
+     * @version    1.0
+     * @author     Gerald Plusquellec
+     * @license    BSD License
+     * @copyright  1996 - 2016 Gerald Plusquellec
+     * @link       http://github.com/schpill/thin
+     */
+
+    namespace Thin;
+
+    class EntityProject
+    {
+        public static function __callStatic($method, $args)
+        {
+            $db = Inflector::uncamelize($method);
+
+            if (fnmatch('*_*', $db)) {
+                list($database, $table) = explode('_', $db, 2);
+            } else {
+                $database   = SITE_NAME;
+                $table      = $db;
+            }
+
+            if (empty($args)) {
+                return core('fast')->instanciate($database, $table);
+            } elseif (count($args) == 1) {
+                $id = current($args);
+
+                if (is_numeric($id)) {
+                    return core('fast')->instanciate($database, $table)->find((int) $id);
+                }
+            }
+        }
+    }
